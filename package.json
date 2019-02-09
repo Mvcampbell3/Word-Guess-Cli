@@ -1,5 +1,5 @@
 {
-  "name": "Word-Guess-Cli",
+  "name": "word-guess-cli",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -19,5 +19,6 @@
   "homepage": "https://github.com/Mvcampbell3/Word-Guess-Cli#readme",
   "dependencies": {
     "inquirer": "^6.2.2"
-  }
+  },
+  "devDependencies": {}
 }
