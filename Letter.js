@@ -17,10 +17,7 @@ function Letter(letter) {
         } else {
             return false;
         }
-
-
-
     }
-}
+};
 
 module.exports = Letter;

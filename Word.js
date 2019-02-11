@@ -6,7 +6,7 @@ function Word(word) {
 
     this.displayWord = function () {
         let display = this.stor.map((v) => v.displayLetter());
-        console.log("\n"+display.join(" ")+"\n\n")
+        return display.join(" ");
     }
 
     this.look = function (inp) {
@@ -17,19 +17,14 @@ function Word(word) {
         let rightWrong = holder.some(thing => thing === true)
 
         if (rightWrong && inp != " ") {
-            console.log("\nYou were Right!\n");
             let fil = this.stor.filter((val) => val.letter === inp);
             fil.forEach((one) => one.check(inp))
-            this.displayWord();
             return true;
         } else if (!rightWrong && inp != " ") {
-            console.log("\nYou were Wrong!\n");
-            this.displayWord();
             return false;
         } else if (inp === " ") {
             let spaces = this.stor.filter((val) => val.letter === " ");
             spaces.forEach((one) => one.guessed = true)
-            this.displayWord();
         }
     }
 }
