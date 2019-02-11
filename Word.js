@@ -27,6 +27,8 @@ function Word(word) {
             this.displayWord();
             return false;
         } else if (inp === " ") {
+            let spaces = this.stor.filter((val) => val.letter === " ");
+            spaces.forEach((one) => one.guessed = true)
             this.displayWord();
         }
 

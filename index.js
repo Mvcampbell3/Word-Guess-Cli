@@ -7,7 +7,7 @@ let game = {
         "Jurrasic Park",
         "Harry Potter",
         "Michael Campbell",
-        "Kid Rock"
+        "Kid Rock",
     ],
 
     actualWord: null,
@@ -21,6 +21,7 @@ let game = {
     playWord: function () {
         this.actualWord = new Word(this.actualWord);
         this.actualWord.look(" ");
+        this.getLetter();
 
     },
 
@@ -57,11 +58,15 @@ let game = {
 
 
         })
+    },
+
+    startGame: function() {
+        console.log("wait");
     }
 
 }
 
 game.pickWord();
-game.playWord();
-game.getLetter();
+game.playWord()
+
 
