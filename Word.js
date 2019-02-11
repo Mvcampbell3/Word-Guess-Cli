@@ -31,8 +31,6 @@ function Word(word) {
             spaces.forEach((one) => one.guessed = true)
             this.displayWord();
         }
-
-
     }
 }
 

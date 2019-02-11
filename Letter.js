@@ -1,22 +1,25 @@
-function Letter (letter) {
+function Letter(letter) {
     this.letter = letter.toUpperCase();
     this.guessed = false;
 
-    this.displayLetter = function() {
+    this.displayLetter = function () {
         if (!this.guessed) {
-            return "_"
+            return "_";
         } else {
             return this.letter;
         }
     };
-    
-    this.check = function(userInput) {
-        if (userInput === this.letter){
+
+    this.check = function (userInput) {
+        if (userInput === this.letter) {
             this.guessed = true;
             return true;
         } else {
             return false;
         }
+
+
+
     }
 }
 

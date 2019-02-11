@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Mvcampbell3/Word-Guess-Cli#readme",
   "dependencies": {
+    "chalk": "^2.4.2",
     "inquirer": "^6.2.2"
   },
   "devDependencies": {}
