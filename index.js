@@ -1,20 +1,17 @@
 let Word = require("./Word");
 let inquirer = require("inquirer");
+let fs = require("fs");
 
 let chalk = require("chalk");
 
 let game = {
 
-    words: [
-        // "Global Thermonuclear War",
-        // "Matthew Broderick",
-        // "The only winning move is not to play"
-        "fast"
-    ],
+    words: [],
 
     actualWord: null,
 
     pickWord: function () {
+        
         let number = Math.floor(Math.random() * this.words.length);
         this.actualWord = this.words[number];
         this.words.splice(number, 1);
@@ -22,6 +19,9 @@ let game = {
     },
 
     playWord: function () {
+        for (var screen = 0; screen < 50; screen++) {
+            console.log("\r\n")
+        }
         this.actualWord = new Word(this.actualWord);
         this.actualWord.look(" ");
         console.log(chalk.yellow("\nLetters already guessed: " + game.guessed.join(" ") + "\n"))
@@ -93,7 +93,7 @@ let game = {
             } else {
                 console.log(chalk.yellow("\nLetters already guessed: " + game.guessed.join(" ") + "\n"))
                 console.log(chalk.cyan(this.actualWord.displayWord()))
-                console.log("\nThat was not the guess you were looking for... only letters accepted\n");
+                console.log("\nPlease guess one letter at a time\n");
                 game.getLetter();
             }
         })
@@ -102,9 +102,12 @@ let game = {
     startGame: function () {
         console.log(chalk.blue("\n\nWelcome to the Word Guess Game\n"));
         console.log(chalk.blue("You are going to asked to guess letters of a hidden word\n"));
-        console.log(chalk.blue("All of the words will have the movie WarGames in common\n"))
-
-
+        console.log(chalk.blue("There are 3 categories to choose from, have fun!\n"));
+        game.words = [];
+        game.wins = 0;
+        game.losses = 0;
+        game.lives = 10;
+        game.guessed = [];
 
         inquirer.prompt(
             {
@@ -115,13 +118,48 @@ let game = {
             }
         ).then(answer => {
             if (answer.play) {
-                let lines = process.stdout.getWindowSize()[1];
-                for (let i = 0; i < lines; i++) {
-                    console.log('\r\n');
-                }
-                game.pickWord();
+                inquirer.prompt({
+                    type: "list",
+                    name: "quiz",
+                    message: "\nWhich group of words would you like to use?\n\n",
+                    choices: [
+                        chalk.blue("Tampa Bay Lightning Players\n"),
+                        chalk.green("Mel Brooks Movies\n"),
+                        chalk.red("Tom Petty Songs\n")
+                    ]
+                }).then(answer => {
+
+                    var grabText;
+
+                    fs.readFile("./keeper.txt", "utf8", (err, data) => {
+                        if (err) throw err;
+                        grabText = data.split(";");
+                        switch (answer.quiz) {
+                            case chalk.blue("Tampa Bay Lightning Players\n"):
+                                game.words = grabText[0].split(", ")
+
+                                game.pickWord();
+                                break;
+                            case chalk.green("Mel Brooks Movies\n"):
+                                game.words = grabText[1].split(", ");
+
+                                game.pickWord();
+                                break;
+                            case chalk.red("Tom Petty Songs\n"):
+                                game.words = grabText[2].split(", ");
+
+                                game.pickWord();
+                                break;
+                            default:
+                                console.log("I think I know why this is happening");
+                                console.log("I did so you should never see this message")
+                        }
+                    })
+
+                })
+
             } else {
-                console.log("\nThen why are you even here? Stop wasting my time, human\n")
+                console.log("\nRaspberry. There's only one man who would dare give me the raspberry: Lone Star!\n")
             }
         })
     },
@@ -130,52 +168,46 @@ let game = {
         inquirer.prompt({
             type: "confirm",
             name: "continue",
-            message: chalk.green("  Would you like to continue  "),
+            message: chalk.green("  Would you like to continue this round? "),
             default: true
         }).then((answer) => {
             if (answer.continue) {
-                let lines = process.stdout.getWindowSize()[1];
-                for (let i = 0; i < lines; i++) {
-                    console.log('\r\n');
-                }
+                
                 game.guessed = [];
                 game.pickWord();
             } else {
-                console.log("\nThank you very much for playing!\n")
+                inquirer.prompt({
+                    type: "confirm",
+                    name: "main",
+                    message: chalk.yellow("\nWould you like to return to the main menu?"),
+                    default: true
+                }).then(answer => {
+                    if (answer.main) {
+                        game.startGame()
+                    } else {
+                        console.log(chalk.red("\nThank you for playing!\n"))
+                    }
+                })
             }
         })
     },
 
     endGame: function () {
-        console.log(chalk.blue("\nGame is out of words, \n\nYou ended up getting " + this.wins + " right!\n\n"));
+        console.log(chalk.blue("\nRound is over, \n\nYou ended up getting " + this.wins + " right!\n\n"));
         inquirer.prompt({
             type: "confirm",
             name: "keep",
             message: chalk.yellow("Would you like to play again?"),
             default: true
-        }).then(answer =>{
+        }).then(answer => {
             if (answer.keep) {
-                game.words = [
-                    "Global Thermonuclear War",
-                    "Matthew Broderick",
-                    "The only winning move is not to play"
-                ];
-                game.wins = 0;
-                game.losses = 0;
-                game.lives = 10;
-                game.guessed = [];
-                let lines = process.stdout.getWindowSize()[1];
-                for (let i = 0; i < lines; i++) {
-                    console.log('\r\n');
-                }
-                game.pickWord();
-
+                game.startGame();
             } else {
-
-            console.log(chalk.blue("\nThank you very much for playing!"))
+                console.log(chalk.blue("\nThank you very much for playing!"))
             }
         })
     }
 }
 
 game.startGame();
+
